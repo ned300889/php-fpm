@@ -1,0 +1,27 @@
+---
+- name: Install php7.4 and php7.4-fpm
+  apt:
+    name:
+    - php7.4
+    - php7.4-fpm
+    state: present
+    update_cache: true 
+
+- name: Enable modules for FPM 
+  apache2_module: 
+    state: present
+    name: 
+      - actions
+      - fcgid
+      - alias
+      - proxy_fcgi
+
+- name: Put proxy pass into the current vhost conf.
+  blockinfile:
+    path: "{{ apache_path }}/sites-enabled/{{ site_name }}.conf"
+    block: |
+      <FilesMatch \.php$>
+          # 2.4.10+ can proxy to unix socket
+          SetHandler "proxy:unix:/var/run/php/php7.4-fpm.sock|fcgi://localhost"
+      </FilesMatch>
+    insertafter: 'DocumentRoot'
