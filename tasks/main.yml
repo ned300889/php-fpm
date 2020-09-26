@@ -5,16 +5,13 @@
     - php7.4
     - php7.4-fpm
     state: present
-    update_cache: true 
+    update_cache: true
 
-- name: Enable modules for FPM 
-  apache2_module: 
+- name: Enable modules for FPM
+  apache2_module:
     state: present
-    name: 
-      - actions
-      - fcgid
-      - alias
-      - proxy_fcgi
+    name: "{{ item }}"
+  loop: "{{ __php_fpm_modules }}"
 
 - name: Put proxy pass into the current vhost conf.
   blockinfile:

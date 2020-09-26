@@ -1,2 +1,5 @@
 ---
-# vars file for php-fpm
+__php_fpm_modules: 
+  - actions
+  - alias
+  - proxy_fcgi
